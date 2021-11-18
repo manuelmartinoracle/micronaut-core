@@ -182,6 +182,18 @@ public class JaegerConfiguration implements Toggleable  {
     }
 
     /**
+     * Sets the codec configuration.
+     * @author Manuel Martin
+     * @param codecConfiguration The codec configuration
+     */
+    @Inject
+    public void setCodecConfiguration(@Nullable JaegerCodecConfiguration codecConfiguration) {
+        if (codecConfiguration != null) {
+            configuration.withCodec(codecConfiguration.configuration);
+        }
+    }
+
+    /**
      * Sets the metrics factory to use.
      *
      * @param metricsFactory The metrics factory
@@ -202,7 +214,7 @@ public class JaegerConfiguration implements Toggleable  {
         protected Configuration.SamplerConfiguration configuration = Configuration.SamplerConfiguration.fromEnv();
 
         /**
-         * @return The {@link io.jaegertracing.Configuration.SamplerConfiguration}
+         * @return The {@link Configuration.SamplerConfiguration}
          */
         public Configuration.SamplerConfiguration getSamplerConfiguration() {
             return configuration;
@@ -275,5 +287,24 @@ public class JaegerConfiguration implements Toggleable  {
         public Configuration.SenderConfiguration getSenderConfiguration() {
             return configuration;
         }
+    }
+
+    /**
+     * The codec configuration bean
+     * @author Manuel Martin
+     */
+    @ConfigurationProperties("codec")
+    public static class JaegerCodecConfiguration{
+
+        @ConfigurationBuilder(prefixes = "with")
+        protected Configuration.CodecConfiguration configuration = Configuration.CodecConfiguration .fromEnv();
+
+        /**
+         * @return The codec configuration
+         */
+        public Configuration.CodecConfiguration getCodecConfiguration() {
+            return configuration;
+        }
+
     }
 }
